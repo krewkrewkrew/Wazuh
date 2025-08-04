@@ -39,3 +39,4 @@ Refer to [docs/loki-labs-integration.md](docs/loki-labs-integration.md) for deta
 
 - [Official Wazuh documentation](https://documentation.wazuh.com/4.12/)
 - [Wazuh community resources](https://wazuh.com/community/)
+- [Windows agent installation methods](docs/windows-agent-installation.md)
