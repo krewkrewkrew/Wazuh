@@ -1,0 +1,11 @@
+filebeat.inputs:
+  - type: log
+    paths:
+      - /var/ossec/logs/alerts/alerts.json
+    json.keys_under_root: true
+    json.add_error_key: true
+
+output.elasticsearch:
+  hosts: ["http://lokilabs-wazuh-indexer:9200"]
+  username: ${LOKI_LABS_ELASTIC_USER}
+  password: ${LOKI_LABS_ELASTIC_PASS}

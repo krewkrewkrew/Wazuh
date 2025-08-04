@@ -1,6 +1,6 @@
 # Wazuh 4.12 Endpoint Security Platform
 
-Wazuh 4.12 is an open-source XDR and SIEM platform that we use to monitor security events across our infrastructure. Its modular architecture lets us collect telemetry from any endpoint—whether the software is commercial or open source—without licensing barriers, keeping operational costs low.
+This repository provides a Loki Labs–oriented distribution of the Wazuh 4.12 XDR and SIEM platform. It mirrors the official Wazuh structure while applying conventions and defaults used in [Loki Labs](https://lokilabs.io) deployments. The goal is to offer our clients a secure, cost‑effective stack that integrates seamlessly with Loki Labs services.
 
 ## Data Collection from Any Endpoint
 
@@ -28,6 +28,12 @@ Wazuh agents and integrations ingest logs, metrics, and alerts from Windows, Lin
 ## Cost-Efficient Security
 
 Because Wazuh is free and open source, we can deploy it broadly without per-endpoint licensing fees. Horizontal scaling and commodity hardware further reduce the total cost of ownership while delivering enterprise-grade security analytics.
+
+## Loki Labs Deployment
+
+The `docker-compose.yml` file in this repository launches the Wazuh manager, indexer, dashboard, and a Filebeat sidecar on a dedicated `loki-security-net` network. Services are preconfigured to use certificates issued by the Loki Labs PKI and to forward alerts into the Loki Labs telemetry pipeline.
+
+Refer to [docs/loki-labs-integration.md](docs/loki-labs-integration.md) for details on authentication, customization, and support resources.
 
 ## Further Reading
 

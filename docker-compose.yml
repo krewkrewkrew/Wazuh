@@ -1,0 +1,66 @@
+version: "3.9"
+services:
+  wazuh-manager:
+    image: wazuh/wazuh-manager:4.12.0
+    container_name: lokilabs-wazuh-manager
+    hostname: lokilabs-wazuh-manager
+    networks:
+      - loki-security-net
+    volumes:
+      - wazuh-manager-data:/var/ossec/data
+      - /var/ssl/lokilabs:/certs
+    ports:
+      - "1514:1514/udp"
+      - "1515:1515"
+      - "55000:55000"
+
+  wazuh-indexer:
+    image: wazuh/wazuh-indexer:4.12.0
+    container_name: lokilabs-wazuh-indexer
+    hostname: lokilabs-wazuh-indexer
+    networks:
+      - loki-security-net
+    volumes:
+      - wazuh-indexer-data:/usr/share/opensearch/data
+    environment:
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+
+  wazuh-dashboard:
+    image: wazuh/wazuh-dashboard:4.12.0
+    container_name: lokilabs-wazuh-dashboard
+    hostname: lokilabs-wazuh-dashboard
+    depends_on:
+      - wazuh-indexer
+      - wazuh-manager
+    networks:
+      - loki-security-net
+    volumes:
+      - /var/ssl/lokilabs:/certs
+    ports:
+      - "443:443"
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.9.1
+    container_name: lokilabs-filebeat
+    user: root
+    depends_on:
+      - wazuh-manager
+      - wazuh-indexer
+    networks:
+      - loki-security-net
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - wazuh-manager-data:/var/ossec/data
+    environment:
+      - LOKI_LABS_ELASTIC_USER=elastic
+      - LOKI_LABS_ELASTIC_PASS=changeme
+
+networks:
+  loki-security-net:
+    driver: bridge
+
+volumes:
+  wazuh-manager-data:
+  wazuh-indexer-data:
